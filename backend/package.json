@@ -9,7 +9,9 @@
     "dev": "nodemon src/server.js",
     "test": "jest",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
   },
   "license": "ISC",
   "dependencies": {
