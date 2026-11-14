@@ -18,7 +18,8 @@ export function jsonResponse(status, body) {
   return {
     ok: status >= 200 && status < 300,
     status,
-    json: () => Promise.resolve(body),
+    // Copy so tests never share objects with component state.
+    json: () => Promise.resolve(structuredClone(body)),
   };
 }
 
