@@ -18,7 +18,10 @@ export default function Layout() {
         </Link>
         {user && (
           <nav>
-            <NavLink to="/">Dashboard</NavLink>
+            <NavLink to="/" end>
+              Dashboard
+            </NavLink>
+            <NavLink to="/courses">Courses</NavLink>
             <span className="muted">{user.name}</span>
             <button type="button" className="secondary" onClick={onLogout}>
               Log out
