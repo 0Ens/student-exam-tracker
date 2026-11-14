@@ -10,4 +10,8 @@ async function login(req, res) {
   res.json(result);
 }
 
-module.exports = { register, login };
+function me(req, res) {
+  res.json({ user: authService.toPublicUser(req.user) });
+}
+
+module.exports = { register, login, me };
