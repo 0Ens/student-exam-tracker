@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { errorHandler, notFound } = require('./middleware/errors');
 const authRoutes = require('./routes/auth');
+const courseRoutes = require('./routes/courses');
 
 function createApp() {
   const app = express();
@@ -14,6 +15,7 @@ function createApp() {
   });
 
   app.use('/api/auth', authRoutes);
+  app.use('/api/courses', courseRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
