@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  courses      Course[]
+}
+
+model Course {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String
+  credits   Int
+  term      String
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exams     Exam[]
+
+  @@index([userId])
+}
+
+// type is one of: exam, quiz, assignment, project (SQLite has no enums)
+model Exam {
+  id        Int      @id @default(autoincrement())
+  title     String
+  type      String
+  date      DateTime
+  weight    Float
+  grade     Float?
+  createdAt DateTime @default(now())
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
