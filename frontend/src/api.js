@@ -49,3 +49,10 @@ export const authApi = {
   login: (input) => apiRequest('/auth/login', { method: 'POST', body: input }),
   me: () => apiRequest('/auth/me'),
 };
+
+export const coursesApi = {
+  list: () => apiRequest('/courses'),
+  create: (input) => apiRequest('/courses', { method: 'POST', body: input }),
+  update: (id, input) => apiRequest(`/courses/${id}`, { method: 'PUT', body: input }),
+  remove: (id) => apiRequest(`/courses/${id}`, { method: 'DELETE' }),
+};
