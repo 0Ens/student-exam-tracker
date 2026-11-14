@@ -303,6 +303,7 @@ components:
         - type: object
           properties:
             id: { type: integer }
+            userId: { type: integer }
             createdAt: { type: string, format: date-time }
 
     ExamInput:
