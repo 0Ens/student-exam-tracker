@@ -1,15 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import App from './App.jsx';
+import { renderApp } from './test/utils.jsx';
 
 describe('App', () => {
   it('renders the layout with the brand link', () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
-    );
+    renderApp('/login');
     expect(screen.getByRole('link', { name: 'Exam Tracker' })).toBeInTheDocument();
   });
 });
