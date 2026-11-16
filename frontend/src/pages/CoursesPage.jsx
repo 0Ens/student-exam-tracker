@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { coursesApi } from '../api.js';
 import CourseForm from '../components/CourseForm.jsx';
 
@@ -73,12 +74,21 @@ export default function CoursesPage() {
               ) : (
                 <div className="course-row">
                   <div>
-                    <strong>{course.code}</strong> {course.name}
+                    <Link to={`/courses/${course.id}`}>
+                      <strong>{course.code}</strong> {course.name}
+                    </Link>
                     <div className="muted">
                       {course.credits} credits · {course.term}
                     </div>
                   </div>
                   <div className="actions">
+                    <Link
+                      className="button-link"
+                      to={`/courses/${course.id}`}
+                      aria-label={`Exams for ${course.code}`}
+                    >
+                      Exams
+                    </Link>
                     <button
                       type="button"
                       className="secondary"
