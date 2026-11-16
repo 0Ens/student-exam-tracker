@@ -232,3 +232,28 @@ describe('exam validation', () => {
     expect(exam.status).toBe(404);
   });
 });
+
+describe('TC-14: users cannot see or change the exams of others', () => {
+  it('returns 404 to another user for every exam endpoint', async () => {
+    const owner = await registerUser(app);
+    const other = await registerUser(app);
+    const course = await createCourse(owner.token);
+    const { body: exam } = await addExam(owner.token, course.id);
+
+    const responses = await Promise.all([
+      request(app).get(`/api/courses/${course.id}/exams`).set(auth(other.token)),
+      addExam(other.token, course.id),
+      request(app).get(`/api/exams/${exam.id}`).set(auth(other.token)),
+      request(app)
+        .put(`/api/exams/${exam.id}`)
+        .set(auth(other.token))
+        .send({ ...midterm, weight: 10 }),
+      request(app).delete(`/api/exams/${exam.id}`).set(auth(other.token)),
+    ]);
+
+    expect(responses.map((r) => r.status)).toEqual([404, 404, 404, 404, 404]);
+    const saved = await prisma.exam.findMany();
+    expect(saved).toHaveLength(1);
+    expect(saved[0].weight).toBe(30);
+  });
+});
