@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Student Exam & Course Tracker API
-  version: 0.1.0
+  version: 0.3.0
   description: REST API used by the React frontend. All endpoints except health, register and login need a Bearer token.
 servers:
   - url: http://localhost:4000/api
@@ -164,7 +164,7 @@ paths:
       - $ref: '#/components/parameters/Id'
     get:
       tags: [Exams]
-      summary: List exams of a course (FR3, planned for S3)
+      summary: List exams of a course, sorted by date (FR3)
       responses:
         '200':
           description: Exams
@@ -173,10 +173,14 @@ paths:
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/Exam' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
     post:
       tags: [Exams]
-      summary: Add an exam or assignment (FR3, planned for S3)
+      summary: Add an exam or assignment (FR3)
+      description: >
+        The weights of all exams of one course cannot add up to more than 100%.
+        If they would, the API returns 400 and details.weight says how much is left.
       requestBody:
         required: true
         content:
@@ -189,13 +193,27 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Exam' }
         '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
 
   /exams/{id}:
     parameters:
       - $ref: '#/components/parameters/Id'
+    get:
+      tags: [Exams]
+      summary: Get one exam (FR3)
+      responses:
+        '200':
+          description: Exam
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Exam' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
     put:
       tags: [Exams]
-      summary: Update an exam (FR3, planned for S3)
+      summary: Update an exam (FR3)
+      description: The old weight of this exam is not counted in the 100% check.
       requestBody:
         required: true
         content:
@@ -207,12 +225,15 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Exam' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
     delete:
       tags: [Exams]
-      summary: Delete an exam (FR3, planned for S3)
+      summary: Delete an exam (FR3)
       responses:
         '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
 
 security:
@@ -310,11 +331,16 @@ components:
       type: object
       required: [title, type, date, weight]
       properties:
-        title: { type: string, example: Midterm }
+        title: { type: string, minLength: 1, maxLength: 100, example: Midterm }
         type: { type: string, enum: [exam, quiz, assignment, project] }
         date: { type: string, format: date-time }
         weight: { type: number, minimum: 0, maximum: 100, example: 30 }
-        grade: { type: number, minimum: 0, maximum: 100, nullable: true }
+        grade:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+          description: Empty or missing means the exam is not graded yet.
 
     Exam:
       allOf:
