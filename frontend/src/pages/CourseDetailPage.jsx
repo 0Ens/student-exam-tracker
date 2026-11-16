@@ -28,7 +28,7 @@ export default function CourseDetailPage() {
     Promise.all([coursesApi.get(id), examsApi.list(id)])
       .then(([c, list]) => {
         setCourse(c);
-        setExams(list);
+        setExams([...list].sort(byDate));
       })
       .catch((err) => setError(err.status === 404 ? 'Course not found' : err.message))
       .finally(() => setLoading(false));
