@@ -52,7 +52,16 @@ export const authApi = {
 
 export const coursesApi = {
   list: () => apiRequest('/courses'),
+  get: (id) => apiRequest(`/courses/${id}`),
   create: (input) => apiRequest('/courses', { method: 'POST', body: input }),
   update: (id, input) => apiRequest(`/courses/${id}`, { method: 'PUT', body: input }),
   remove: (id) => apiRequest(`/courses/${id}`, { method: 'DELETE' }),
+};
+
+export const examsApi = {
+  list: (courseId) => apiRequest(`/courses/${courseId}/exams`),
+  create: (courseId, input) =>
+    apiRequest(`/courses/${courseId}/exams`, { method: 'POST', body: input }),
+  update: (id, input) => apiRequest(`/exams/${id}`, { method: 'PUT', body: input }),
+  remove: (id) => apiRequest(`/exams/${id}`, { method: 'DELETE' }),
 };
