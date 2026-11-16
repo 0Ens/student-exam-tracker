@@ -89,13 +89,19 @@
 
 ```
 +------------------------------------------------------------+
-|  SWE488 Software Testing            Average: 68.0          |
-|  [ + Add exam/assignment ]                                 |
-|  Title       Type        Date        Weight  Grade         |
-|  Midterm     exam        20 Nov      40%     80   [Edit][x]|
-|  Project     project     18 Dec      60%     60   [Edit][x]|
+|  <- My courses                                             |
+|  SWE488 Software Project Management   3 credits, 2026 Fall |
+|  Add an exam or assignment                                 |
+|  Title [______] Type [Exam v] Date [__] Weight [__] %      |
+|  Grade [______] (optional)          [ Add exam ]           |
+|  ! Only 60% is left for this course                        |
+|  Weight used: 40% of 100%                                  |
+|  Midterm  [Exam]   20 Nov 2026 · 40% · Grade 80 [Edit][Del]|
+|  Project  [Project] 18 Dec 2026 · 60% · Not graded yet     |
 +------------------------------------------------------------+
 ```
+
+The course average (3.4) is added to this page in S4.
 
 ### Dashboard (S4)
 
