@@ -147,3 +147,26 @@ h2 {
 .topbar nav a.active {
   font-weight: 600;
 }
+
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.weight-summary {
+  margin: 0;
+}
+
+.button-link {
+  display: inline-block;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+}
