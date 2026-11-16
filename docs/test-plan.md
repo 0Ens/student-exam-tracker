@@ -24,8 +24,8 @@ API tests run against a separate SQLite database (`test.db`) that is reset befor
 | TC-04 | FR1      | Log in with a wrong password, then log out  | Error message; after logout the dashboard cannot be opened | API, UI       | Automated, passing |
 | TC-05 | FR2      | Add, edit and delete a course               | The course list changes correctly                          | API, UI       | Automated, passing |
 | TC-06 | FR2      | Add a course without a name                 | Error message, nothing is saved                            | API, UI       | Automated, passing |
-| TC-07 | FR3      | Add an exam with date and weight 30%        | The exam is shown under the course                         | API           | Planned            |
-| TC-08 | FR3      | Total weight of a course is more than 100%  | Error message                                              | API           | Planned            |
+| TC-07 | FR3      | Add an exam with date and weight 30%        | The exam is shown under the course                         | API, UI       | Automated, passing |
+| TC-08 | FR3      | Total weight of a course is more than 100%  | Error message                                              | API, UI       | Automated, passing |
 | TC-09 | FR4      | Dashboard with past and future exams        | Sorted by date, past ones marked as overdue                | Unit, E2E     | Planned            |
 | TC-10 | FR5      | Grades 80 (40%) and 60 (60%)                | Course average is 68                                       | Unit          | Planned            |
 | TC-11 | FR5      | Two courses with different credits          | GPA is calculated using credits                            | Unit          | Planned            |
@@ -35,14 +35,14 @@ API tests run against a separate SQLite database (`test.db`) that is reset befor
 | TC-15 | NFR      | Open the app on a phone and on a laptop     | The layout works on both                                   | Manual        | Planned            |
 | TC-16 | NFR      | After deployment, open the site and log in  | Site works online                                          | Manual, smoke | Planned            |
 
-## Current status (14 Nov 2026)
+## Current status (17 Nov 2026)
 
 | Suite             | Tests | Result | Coverage                    |
 | ----------------- | ----- | ------ | --------------------------- |
-| Backend (Jest)    | 23    | Pass   | 98.6% lines, 82.5% branches |
-| Frontend (Vitest) | 24    | Pass   | -                           |
+| Backend (Jest)    | 38    | Pass   | 99.0% lines, 87.3% branches |
+| Frontend (Vitest) | 46    | Pass   | -                           |
 
-Test cases TC-01 to TC-06 and TC-14 are automated. The others belong to later sprints (S3-S5, release).
+Test cases TC-01 to TC-08 and TC-14 are automated. TC-07 and TC-08 are tested on the API and on the exams page; the page also blocks a weight over 100% before it calls the API. The other test cases belong to later sprints (S4-S5, release).
 
 ## Entry and exit criteria
 

@@ -38,4 +38,4 @@ async function deleteCourse(userId, rawId) {
   await prisma.course.delete({ where: { id: course.id } });
 }
 
-module.exports = { listCourses, getCourse, createCourse, updateCourse, deleteCourse };
+module.exports = { parseId, listCourses, getCourse, createCourse, updateCourse, deleteCourse };
