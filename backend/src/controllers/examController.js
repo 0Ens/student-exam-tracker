@@ -8,6 +8,10 @@ async function createForCourse(req, res) {
   res.status(201).json(await examService.createExam(req.user.id, req.params.id, req.body));
 }
 
+async function search(req, res) {
+  res.json(await examService.searchExams(req.user.id, req.validQuery));
+}
+
 async function get(req, res) {
   res.json(await examService.getExam(req.user.id, req.params.id));
 }
@@ -21,4 +25,4 @@ async function remove(req, res) {
   res.status(204).end();
 }
 
-module.exports = { listForCourse, createForCourse, get, update, remove };
+module.exports = { listForCourse, createForCourse, search, get, update, remove };
