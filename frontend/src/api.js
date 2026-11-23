@@ -65,3 +65,8 @@ export const examsApi = {
   update: (id, input) => apiRequest(`/exams/${id}`, { method: 'PUT', body: input }),
   remove: (id) => apiRequest(`/exams/${id}`, { method: 'DELETE' }),
 };
+
+export const gradesApi = {
+  list: () => apiRequest('/grades'),
+  forCourse: (courseId) => apiRequest(`/courses/${courseId}/grade`),
+};
