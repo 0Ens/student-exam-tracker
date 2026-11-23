@@ -4,6 +4,7 @@ const { errorHandler, notFound } = require('./middleware/errors');
 const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/courses');
 const examRoutes = require('./routes/exams');
+const gradeRoutes = require('./routes/grades');
 
 function createApp() {
   const app = express();
@@ -18,6 +19,7 @@ function createApp() {
   app.use('/api/auth', authRoutes);
   app.use('/api/courses', courseRoutes);
   app.use('/api/exams', examRoutes);
+  app.use('/api/grades', gradeRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
