@@ -42,11 +42,13 @@ describe('letterGrade', () => {
     [100, 'AA', 4],
     [90, 'AA', 4],
     [89.99, 'BA', 3.5],
-    [80, 'BA', 3.5],
-    [79.99, 'BB', 3],
-    [75, 'BB', 3],
-    [70, 'CB', 2.5],
-    [65, 'CC', 2],
+    [85, 'BA', 3.5],
+    [84.99, 'BB', 3],
+    [80, 'BB', 3],
+    [75, 'CB', 2.5],
+    [70, 'CC', 2],
+    [69.99, 'DC', 1.5],
+    [65, 'DC', 1.5],
     [60, 'DC', 1.5],
     [59.99, 'DD', 1],
     [50, 'DD', 1],
@@ -81,7 +83,7 @@ describe('gpa', () => {
     expect(
       gpa([
         { credits: 3, average: 92 },
-        { credits: 1, average: 67 },
+        { credits: 1, average: 71 },
       ]),
     ).toBe(3.5);
   });
@@ -103,7 +105,7 @@ describe('gpa', () => {
   it('leaves out courses without grades', () => {
     expect(
       gpa([
-        { credits: 3, average: 77 },
+        { credits: 3, average: 82 },
         { credits: 6, average: null },
       ]),
     ).toBe(3);
