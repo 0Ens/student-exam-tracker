@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const controller = require('../controllers/courseController');
 const examController = require('../controllers/examController');
+const gradeController = require('../controllers/gradeController');
 const { validate } = require('../middleware/validate');
 const { requireAuth } = require('../middleware/auth');
 const { courseSchema } = require('../schemas/course');
@@ -19,5 +20,8 @@ router.delete('/:id', controller.remove);
 // Exams belong to a course (FR3)
 router.get('/:id/exams', examController.listForCourse);
 router.post('/:id/exams', validate(examSchema), examController.createForCourse);
+
+// Average and letter grade of one course (FR5)
+router.get('/:id/grade', gradeController.forCourse);
 
 module.exports = router;

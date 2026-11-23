@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { coursesApi, examsApi } from '../api.js';
+import { coursesApi, examsApi, gradesApi } from '../api.js';
 import ExamForm, { TYPE_LABELS } from '../components/ExamForm.jsx';
 
 // Dates are saved as midnight UTC, so they are shown in UTC to keep the same day.
@@ -23,6 +23,16 @@ export default function CourseDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const [grade, setGrade] = useState(null);
+
+  // The average is calculated by the backend (WBS 3.4). It is loaded again
+  // after every change. If it fails, the rest of the page still works.
+  const loadGrade = useCallback(() => {
+    gradesApi
+      .forCourse(id)
+      .then(setGrade)
+      .catch(() => setGrade(null));
+  }, [id]);
 
   useEffect(() => {
     Promise.all([coursesApi.get(id), examsApi.list(id)])
@@ -32,7 +42,8 @@ export default function CourseDetailPage() {
       })
       .catch((err) => setError(err.status === 404 ? 'Course not found' : err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+    loadGrade();
+  }, [id, loadGrade]);
 
   const usedWeight = round(exams.reduce((sum, e) => sum + e.weight, 0));
   const weightLeft = round(100 - usedWeight);
@@ -40,12 +51,14 @@ export default function CourseDetailPage() {
   const addExam = async (input) => {
     const created = await examsApi.create(id, input);
     setExams((list) => [...list, created].sort(byDate));
+    loadGrade();
   };
 
   const saveExam = async (examId, input) => {
     const updated = await examsApi.update(examId, input);
     setExams((list) => list.map((e) => (e.id === examId ? updated : e)).sort(byDate));
     setEditingId(null);
+    loadGrade();
   };
 
   const deleteExam = async (exam) => {
@@ -56,6 +69,7 @@ export default function CourseDetailPage() {
     try {
       await examsApi.remove(exam.id);
       setExams((list) => list.filter((e) => e.id !== exam.id));
+      loadGrade();
     } catch (err) {
       setError(err.message);
     }
@@ -99,9 +113,21 @@ export default function CourseDetailPage() {
         )}
       </div>
 
-      <p className="weight-summary" aria-live="polite">
-        Weight used: <strong>{usedWeight}%</strong> of 100%
-      </p>
+      <div className="summary-row">
+        <p className="weight-summary" aria-live="polite">
+          Weight used: <strong>{usedWeight}%</strong> of 100%
+        </p>
+        <p className="weight-summary" aria-live="polite">
+          {grade && grade.average !== null ? (
+            <>
+              Course average: <strong>{grade.average}</strong> ({grade.letter}, based on{' '}
+              {grade.gradedWeight}% graded)
+            </>
+          ) : (
+            <span className="muted">Course average: no grades yet</span>
+          )}
+        </p>
+      </div>
 
       {error && (
         <p className="error" role="alert">

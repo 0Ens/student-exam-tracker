@@ -24,7 +24,19 @@ const midterm = {
   grade: null,
 };
 
-// Small in-memory fake of the courses and exams API.
+// Same rule as the backend: weighted average of the graded exams.
+function gradeOf(exams) {
+  const graded = exams.filter((e) => e.grade !== null && e.grade !== undefined);
+  const gradedWeight = graded.reduce((sum, e) => sum + e.weight, 0);
+  const average = gradedWeight
+    ? Math.round((graded.reduce((sum, e) => sum + e.grade * e.weight, 0) / gradedWeight) * 100) /
+      100
+    : null;
+  const letter = average === null ? null : average >= 85 ? 'BA' : average >= 65 ? 'DC' : 'FF';
+  return { id: 1, average, letter, gradedWeight };
+}
+
+// Small in-memory fake of the courses, exams and grades API.
 function fakeBackend(initialExams = [], { failCreate } = {}) {
   let exams = [...initialExams];
   let nextId = 100;
@@ -33,6 +45,7 @@ function fakeBackend(initialExams = [], { failCreate } = {}) {
     if (path === '/courses' && method === 'GET') return jsonResponse(200, [course]);
     if (path === '/courses/1' && method === 'GET') return jsonResponse(200, course);
     if (path === '/courses/1/exams' && method === 'GET') return jsonResponse(200, exams);
+    if (path === '/courses/1/grade') return jsonResponse(200, gradeOf(exams));
     if (path === '/courses/1/exams' && method === 'POST') {
       if (failCreate) return failCreate;
       const created = {
@@ -148,6 +161,42 @@ describe('course detail page', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Validation failed');
     expect(screen.getByText('Only 20% is left for this course')).toBeInTheDocument();
+  });
+
+  it('shows that there is no average before the first grade', async () => {
+    fakeBackend([midterm]);
+    renderApp('/courses/1');
+    expect(await screen.findByText('Course average: no grades yet')).toBeInTheDocument();
+  });
+
+  it('TC-10: shows the course average from the grades API', async () => {
+    fakeBackend([
+      { ...midterm, grade: 80 },
+      {
+        ...midterm,
+        id: 11,
+        title: 'Final',
+        date: '2027-01-10T00:00:00.000Z',
+        weight: 60,
+        grade: 60,
+      },
+    ]);
+    renderApp('/courses/1');
+    expect(await screen.findByText(/Course average/)).toHaveTextContent(
+      'Course average: 68 (DC, based on 100% graded)',
+    );
+  });
+
+  it('updates the average after a grade is added', async () => {
+    // Weight 100, so the add form is hidden and only the edit form is shown.
+    fakeBackend([{ ...midterm, weight: 100 }]);
+    renderApp('/courses/1');
+    await userEvent.click(await screen.findByRole('button', { name: 'Edit Midterm' }));
+    await userEvent.type(screen.getByLabelText('Grade (optional)'), '90');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(await screen.findByText(/BA, based on/)).toHaveTextContent(
+      'Course average: 90 (BA, based on 100% graded)',
+    );
   });
 
   it('hides the add form when the weights reach 100%', async () => {
