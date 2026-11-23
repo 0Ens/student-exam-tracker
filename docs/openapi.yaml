@@ -296,8 +296,9 @@ paths:
       summary: Averages of all courses and the estimated GPA (FR5)
       description: >
         The course average is the weighted average of the graded exams.
-        The GPA uses a 4.0 scale (AA 4.0, BA 3.5, BB 3.0, CB 2.5, CC 2.0,
-        DC 1.5, DD 1.0, FD 0.5, FF 0) and is weighted by credits.
+        Letters: AA 90+, BA 80+, BB 75+, CB 70+, CC 65+, DC 60+, DD 50+,
+        FF below 50. The GPA uses a 4.0 scale (AA 4.0, BA 3.5, BB 3.0,
+        CB 2.5, CC 2.0, DC 1.5, DD 1.0, FF 0) and is weighted by credits.
         Courses without grades are not counted.
       responses:
         '200':

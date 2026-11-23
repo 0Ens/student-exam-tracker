@@ -11,7 +11,7 @@ const mat101 = { id: 2, code: 'MAT101', name: 'Calculus' };
 const grades = {
   gpa: 3.1,
   courses: [
-    { ...cs201, credits: 4, average: 82.5, letter: 'BB', points: 3, gradedWeight: 40 },
+    { ...cs201, credits: 4, average: 82.5, letter: 'BA', points: 3.5, gradedWeight: 40 },
     { ...mat101, credits: 3, average: null, letter: null, points: null, gradedWeight: 0 },
   ],
 };
@@ -104,7 +104,7 @@ describe('dashboard', () => {
     const [, first, second] = within(table).getAllByRole('row');
     expect(first).toHaveTextContent('CS201 Algorithms');
     expect(first).toHaveTextContent('82.5 (40% graded)');
-    expect(first).toHaveTextContent('BB');
+    expect(first).toHaveTextContent('BA');
     expect(second).toHaveTextContent('No grades');
   });
 

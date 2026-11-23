@@ -101,14 +101,14 @@
 +------------------------------------------------------------+
 ```
 
-Since S4 the page also shows the course average under the list, for example `Course average: 68 (DC, based on 100% graded)`.
+Since S4 the page also shows the course average under the list, for example `Course average: 68 (CC, based on 100% graded)`.
 
 ### Dashboard (S4)
 
 ```
 +------------------------------------------------------------+
 |  Hello, Ayse                                               |
-|  [Estimated GPA 3.43] [Upcoming (14 days) 2] [Overdue 1]   |
+|  [Estimated GPA 3.71] [Upcoming (14 days) 2] [Overdue 1]   |
 |                                                            |
 |  Overdue                                                   |
 |  ! Homework 2  [Assignment]  MAT101 · 10 Nov   13 days ago |
@@ -119,7 +119,7 @@ Since S4 the page also shows the course average under the list, for example `Cou
 |                                                            |
 |  Course averages                                           |
 |  Course            Credits  Average           Letter       |
-|  CS201 Algorithms  4        80 (40% graded)   BB           |
+|  CS201 Algorithms  4        80 (40% graded)   BA           |
 |  MAT101 Calculus   3        91 (30% graded)   AA           |
 +------------------------------------------------------------+
 ```

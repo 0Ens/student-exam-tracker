@@ -1,17 +1,16 @@
 // Grade calculation rules (FR5). Pure functions, no database access,
 // so they can be unit tested on their own (WBS 3.4, 5.2).
 
-// Letter grades on a 4.0 scale, as used by most Turkish universities.
+// Letter grades on the 4.0 scale of our university (there is no FD).
 // Each row is the lowest course average for that letter.
 const SCALE = [
   { min: 90, letter: 'AA', points: 4.0 },
-  { min: 85, letter: 'BA', points: 3.5 },
-  { min: 80, letter: 'BB', points: 3.0 },
-  { min: 75, letter: 'CB', points: 2.5 },
-  { min: 70, letter: 'CC', points: 2.0 },
-  { min: 65, letter: 'DC', points: 1.5 },
-  { min: 60, letter: 'DD', points: 1.0 },
-  { min: 50, letter: 'FD', points: 0.5 },
+  { min: 80, letter: 'BA', points: 3.5 },
+  { min: 75, letter: 'BB', points: 3.0 },
+  { min: 70, letter: 'CB', points: 2.5 },
+  { min: 65, letter: 'CC', points: 2.0 },
+  { min: 60, letter: 'DC', points: 1.5 },
+  { min: 50, letter: 'DD', points: 1.0 },
   { min: 0, letter: 'FF', points: 0.0 },
 ];
 
