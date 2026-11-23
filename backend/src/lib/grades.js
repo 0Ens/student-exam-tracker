@@ -5,10 +5,10 @@
 // Each row is the lowest course average for that letter.
 const SCALE = [
   { min: 90, letter: 'AA', points: 4.0 },
-  { min: 80, letter: 'BA', points: 3.5 },
-  { min: 75, letter: 'BB', points: 3.0 },
-  { min: 70, letter: 'CB', points: 2.5 },
-  { min: 65, letter: 'CC', points: 2.0 },
+  { min: 85, letter: 'BA', points: 3.5 },
+  { min: 80, letter: 'BB', points: 3.0 },
+  { min: 75, letter: 'CB', points: 2.5 },
+  { min: 70, letter: 'CC', points: 2.0 },
   { min: 60, letter: 'DC', points: 1.5 },
   { min: 50, letter: 'DD', points: 1.0 },
   { min: 0, letter: 'FF', points: 0.0 },
