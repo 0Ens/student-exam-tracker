@@ -48,8 +48,8 @@ describe('GET /api/courses/:id/grade', () => {
       name: 'Algorithms',
       credits: 4,
       average: 68,
-      letter: 'DC',
-      points: 1.5,
+      letter: 'CC',
+      points: 2,
       gradedWeight: 100,
     });
   });
@@ -86,7 +86,7 @@ describe('GET /api/grades', () => {
     const history = await createCourse(token, { name: 'History', code: 'HIS101', credits: 1 });
     const empty = await createCourse(token, { name: 'Physics', code: 'PHY101', credits: 5 });
     await addExam(token, algorithms.id, 50, 92);
-    await addExam(token, history.id, 100, 71);
+    await addExam(token, history.id, 100, 67);
     await addExam(token, empty.id, 30, null);
 
     const res = await request(app).get('/api/grades').set(auth(token));
@@ -96,7 +96,7 @@ describe('GET /api/grades', () => {
     expect(res.body.courses).toHaveLength(3);
     const byCode = Object.fromEntries(res.body.courses.map((c) => [c.code, c]));
     expect(byCode.CS201).toMatchObject({ average: 92, letter: 'AA', gradedWeight: 50 });
-    expect(byCode.HIS101).toMatchObject({ average: 71, letter: 'CC' });
+    expect(byCode.HIS101).toMatchObject({ average: 67, letter: 'CC' });
     expect(byCode.PHY101).toMatchObject({ average: null, letter: null });
   });
 

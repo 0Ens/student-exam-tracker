@@ -1,4 +1,4 @@
-const { courseAverage, letterGrade, gpa, round2 } = require('../../src/lib/grades');
+const { SCALE, courseAverage, letterGrade, gpa, round2 } = require('../../src/lib/grades');
 
 const exam = (weight, grade) => ({ weight, grade });
 
@@ -42,17 +42,31 @@ describe('letterGrade', () => {
     [100, 'AA', 4],
     [90, 'AA', 4],
     [89.99, 'BA', 3.5],
-    [85, 'BA', 3.5],
-    [80, 'BB', 3],
-    [75, 'CB', 2.5],
-    [70, 'CC', 2],
-    [65, 'DC', 1.5],
-    [60, 'DD', 1],
-    [50, 'FD', 0.5],
+    [80, 'BA', 3.5],
+    [79.99, 'BB', 3],
+    [75, 'BB', 3],
+    [70, 'CB', 2.5],
+    [65, 'CC', 2],
+    [60, 'DC', 1.5],
+    [59.99, 'DD', 1],
+    [50, 'DD', 1],
     [49.99, 'FF', 0],
     [0, 'FF', 0],
   ])('%p is %s (%p points)', (average, letter, points) => {
     expect(letterGrade(average)).toMatchObject({ letter, points });
+  });
+
+  it('uses the university scale without FD', () => {
+    expect(SCALE.map((row) => row.letter)).toEqual([
+      'AA',
+      'BA',
+      'BB',
+      'CB',
+      'CC',
+      'DC',
+      'DD',
+      'FF',
+    ]);
   });
 
   it('returns null without an average', () => {
@@ -67,7 +81,7 @@ describe('gpa', () => {
     expect(
       gpa([
         { credits: 3, average: 92 },
-        { credits: 1, average: 71 },
+        { credits: 1, average: 67 },
       ]),
     ).toBe(3.5);
   });
@@ -75,11 +89,11 @@ describe('gpa', () => {
   it('TC-11: a course with more credits counts more', () => {
     const light = gpa([
       { credits: 1, average: 95 },
-      { credits: 4, average: 62 },
+      { credits: 4, average: 55 },
     ]);
     const heavy = gpa([
       { credits: 4, average: 95 },
-      { credits: 1, average: 62 },
+      { credits: 1, average: 55 },
     ]);
     // (4 x 1 + 1 x 4) / 5 = 1.6 and (4 x 4 + 1 x 1) / 5 = 3.4
     expect(light).toBe(1.6);
@@ -89,7 +103,7 @@ describe('gpa', () => {
   it('leaves out courses without grades', () => {
     expect(
       gpa([
-        { credits: 3, average: 82 },
+        { credits: 3, average: 77 },
         { credits: 6, average: null },
       ]),
     ).toBe(3);
