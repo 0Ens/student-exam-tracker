@@ -70,3 +70,7 @@ export const gradesApi = {
   list: () => apiRequest('/grades'),
   forCourse: (courseId) => apiRequest(`/courses/${courseId}/grade`),
 };
+
+export const deadlinesApi = {
+  list: (days = 14) => apiRequest(`/deadlines?days=${days}`),
+};
