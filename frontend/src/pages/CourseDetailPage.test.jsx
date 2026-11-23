@@ -32,7 +32,7 @@ function gradeOf(exams) {
     ? Math.round((graded.reduce((sum, e) => sum + e.grade * e.weight, 0) / gradedWeight) * 100) /
       100
     : null;
-  const letter = average === null ? null : average >= 90 ? 'AA' : average >= 65 ? 'CC' : 'FF';
+  const letter = average === null ? null : average >= 90 ? 'AA' : average >= 60 ? 'DC' : 'FF';
   return { id: 1, average, letter, gradedWeight };
 }
 
@@ -183,7 +183,7 @@ describe('course detail page', () => {
     ]);
     renderApp('/courses/1');
     expect(await screen.findByText(/Course average/)).toHaveTextContent(
-      'Course average: 68 (CC, based on 100% graded)',
+      'Course average: 68 (DC, based on 100% graded)',
     );
   });
 
