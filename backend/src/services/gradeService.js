@@ -6,9 +6,7 @@ const { getCourse } = require('./courseService');
 function summarize(course, exams) {
   const average = courseAverage(exams);
   const grade = letterGrade(average);
-  const gradedWeight = exams
-    .filter((e) => e.grade !== null)
-    .reduce((sum, e) => sum + e.weight, 0);
+  const gradedWeight = exams.filter((e) => e.grade !== null).reduce((sum, e) => sum + e.weight, 0);
   return {
     id: course.id,
     code: course.code,
