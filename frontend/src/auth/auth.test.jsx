@@ -3,6 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { jsonResponse, mockFetch, renderApp } from '../test/utils.jsx';
 
+// Answers of the dashboard API for a new user without courses.
+function emptyDashboard(path) {
+  if (path === '/grades') return jsonResponse(200, { gpa: null, courses: [] });
+  if (path.startsWith('/deadlines'))
+    return jsonResponse(200, { days: 14, overdue: [], upcoming: [] });
+  return jsonResponse(404, { error: 'Not found' });
+}
+
 const user = { id: 1, email: 'ali@example.com', name: 'Ali' };
 
 afterEach(() => {
@@ -66,7 +74,9 @@ describe('login page', () => {
 
   it('TC-04: logout clears the token and returns to login', async () => {
     localStorage.setItem('token', 'tok');
-    mockFetch(() => jsonResponse(200, { user }));
+    mockFetch((method, path) =>
+      path === '/auth/me' ? jsonResponse(200, { user }) : emptyDashboard(path),
+    );
     renderApp('/');
     await userEvent.click(await screen.findByRole('button', { name: 'Log out' }));
 
@@ -84,7 +94,9 @@ describe('register page', () => {
   }
 
   it('TC-01: registers and opens the dashboard', async () => {
-    const fetch = mockFetch(() => jsonResponse(201, { token: 'new', user }));
+    const fetch = mockFetch((method, path) =>
+      path === '/auth/register' ? jsonResponse(201, { token: 'new', user }) : emptyDashboard(path),
+    );
     renderApp('/register');
     await fillRegister();
 

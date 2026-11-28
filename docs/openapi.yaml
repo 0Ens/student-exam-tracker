@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Student Exam & Course Tracker API
-  version: 0.3.0
+  version: 0.4.0
   description: REST API used by the React frontend. All endpoints except health, register and login need a Bearer token.
 servers:
   - url: http://localhost:4000/api
@@ -12,6 +12,8 @@ tags:
   - name: Auth
   - name: Courses
   - name: Exams
+  - name: Grades
+  - name: Dashboard
 
 paths:
   /health:
@@ -196,6 +198,58 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
 
+  /courses/{id}/grade:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [Grades]
+      summary: Weighted average and letter grade of one course (FR5)
+      responses:
+        '200':
+          description: Grade of the course
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CourseGrade' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /exams:
+    get:
+      tags: [Exams]
+      summary: Search and filter all exams of the user (FR6)
+      description: >
+        All filters are optional and can be combined. Empty values mean "no filter".
+        The result is sorted by date and every item includes its course.
+      parameters:
+        - name: q
+          in: query
+          description: Text in the exam title or the course code or name (not case sensitive).
+          schema: { type: string, maxLength: 100 }
+        - name: courseId
+          in: query
+          schema: { type: integer, minimum: 1 }
+        - name: type
+          in: query
+          schema: { type: string, enum: [exam, quiz, assignment, project] }
+        - name: from
+          in: query
+          description: First date (inclusive).
+          schema: { type: string, format: date, example: '2026-11-01' }
+        - name: to
+          in: query
+          description: Last date (inclusive, a plain date includes the whole day).
+          schema: { type: string, format: date, example: '2026-11-30' }
+      responses:
+        '200':
+          description: Matching exams, can be empty
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ExamWithCourse' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
   /exams/{id}:
     parameters:
       - $ref: '#/components/parameters/Id'
@@ -235,6 +289,44 @@ paths:
         '204': { description: Deleted }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
+
+  /grades:
+    get:
+      tags: [Grades]
+      summary: Averages of all courses and the estimated GPA (FR5)
+      description: >
+        The course average is the weighted average of the graded exams.
+        Letters: AA 90+, BA 85-89, BB 80-84, CB 75-79, CC 70-74, DC 60-69,
+        DD 50-59, FF below 50. The GPA uses a 4.0 scale (AA 4.0, BA 3.5, BB 3.0,
+        CB 2.5, CC 2.0, DC 1.5, DD 1.0, FF 0) and is weighted by credits.
+        Courses without grades are not counted.
+      responses:
+        '200':
+          description: Grades
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GradesSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /deadlines:
+    get:
+      tags: [Dashboard]
+      summary: Upcoming and overdue exams and assignments (FR4)
+      description: >
+        Upcoming = from today until today + days. Overdue = the date has passed
+        and there is no grade yet. Days are counted in UTC.
+      parameters:
+        - name: days
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 365, default: 14 }
+      responses:
+        '200':
+          description: Deadlines
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Deadlines' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
 
 security:
   - bearerAuth: []
@@ -349,3 +441,61 @@ components:
           properties:
             id: { type: integer }
             courseId: { type: integer }
+
+    CourseRef:
+      type: object
+      properties:
+        id: { type: integer }
+        code: { type: string, example: CS201 }
+        name: { type: string, example: Algorithms }
+
+    ExamWithCourse:
+      allOf:
+        - $ref: '#/components/schemas/Exam'
+        - type: object
+          properties:
+            course: { $ref: '#/components/schemas/CourseRef' }
+
+    Deadline:
+      allOf:
+        - $ref: '#/components/schemas/ExamWithCourse'
+        - type: object
+          properties:
+            daysLeft:
+              type: integer
+              description: 0 = today, negative = days ago
+              example: 3
+
+    Deadlines:
+      type: object
+      properties:
+        days: { type: integer, example: 14 }
+        overdue:
+          type: array
+          items: { $ref: '#/components/schemas/Deadline' }
+        upcoming:
+          type: array
+          items: { $ref: '#/components/schemas/Deadline' }
+
+    CourseGrade:
+      type: object
+      properties:
+        id: { type: integer }
+        code: { type: string, example: CS201 }
+        name: { type: string, example: Algorithms }
+        credits: { type: integer, example: 4 }
+        average: { type: number, nullable: true, example: 68 }
+        letter: { type: string, nullable: true, example: DC }
+        points: { type: number, nullable: true, example: 1.5 }
+        gradedWeight:
+          type: number
+          description: Total weight of the graded exams, in percent
+          example: 100
+
+    GradesSummary:
+      type: object
+      properties:
+        gpa: { type: number, nullable: true, example: 3.1 }
+        courses:
+          type: array
+          items: { $ref: '#/components/schemas/CourseGrade' }

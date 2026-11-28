@@ -54,4 +54,26 @@ async function deleteExam(userId, rawId) {
   await prisma.exam.delete({ where: { id: exam.id } });
 }
 
-module.exports = { listExams, getExam, createExam, updateExam, deleteExam };
+// Search and filter over all exams of the user (FR6). Text is matched
+// against the exam title and the course code and name (SQLite LIKE,
+// so it does not care about upper or lower case for a-z).
+function searchExams(userId, { q, courseId, type, from, to } = {}) {
+  const where = { course: { userId } };
+  if (courseId) where.courseId = courseId;
+  if (type) where.type = type;
+  if (from || to) where.date = { ...(from && { gte: from }), ...(to && { lte: to }) };
+  if (q) {
+    where.OR = [
+      { title: { contains: q } },
+      { course: { code: { contains: q } } },
+      { course: { name: { contains: q } } },
+    ];
+  }
+  return prisma.exam.findMany({
+    where,
+    include: { course: { select: { id: true, code: true, name: true } } },
+    orderBy: [{ date: 'asc' }, { id: 'asc' }],
+  });
+}
+
+module.exports = { listExams, getExam, createExam, updateExam, deleteExam, searchExams };
