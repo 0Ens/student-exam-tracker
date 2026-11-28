@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import CoursesPage from './pages/CoursesPage.jsx';
 import CourseDetailPage from './pages/CourseDetailPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/courses/:id" element={<CourseDetailPage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
