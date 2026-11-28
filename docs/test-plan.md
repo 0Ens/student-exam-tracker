@@ -39,7 +39,7 @@ API tests run against a separate SQLite database (`test.db`) that is reset befor
 
 | Suite             | Tests | Result | Coverage                    |
 | ----------------- | ----- | ------ | --------------------------- |
-| Backend (Jest)    | 113   | Pass   | 99.4% lines, 89.8% branches |
+| Backend (Jest)    | 127   | Pass   | 99.4% lines, 92.0% branches |
 | Frontend (Vitest) | 66    | Pass   | -                           |
 
 Test cases TC-01 to TC-14 are automated. TC-07 and TC-08 are tested on the API and on the exams page; the page also blocks a weight over 100% before it calls the API.
