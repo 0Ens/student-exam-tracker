@@ -46,15 +46,15 @@ Backend tests use a separate SQLite database (`backend/test.db`) that is reset b
 
 ## Features so far
 
-| Feature                             | Status                   |
-| ----------------------------------- | ------------------------ |
-| Register, login, logout (FR1)       | Done                     |
-| Courses: add, edit, delete (FR2)    | Done                     |
-| Exams, quizzes, assignments (FR3)   | Done                     |
-| Dashboard with deadlines (FR4)      | Done                     |
-| Course average and GPA (FR5)        | Done                     |
-| Search and filter (FR6)             | API done, page on 24 Nov |
-| Users only see their own data (FR7) | Done                     |
+| Feature                             | Status |
+| ----------------------------------- | ------ |
+| Register, login, logout (FR1)       | Done   |
+| Courses: add, edit, delete (FR2)    | Done   |
+| Exams, quizzes, assignments (FR3)   | Done   |
+| Dashboard with deadlines (FR4)      | Done   |
+| Course average and GPA (FR5)        | Done   |
+| Search and filter (FR6)             | Done   |
+| Users only see their own data (FR7) | Done   |
 
 ## Branches
 
