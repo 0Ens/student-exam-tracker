@@ -1,4 +1,9 @@
-const { checkProductionEnv, corsOrigins, MIN_SECRET_LENGTH } = require('../../src/lib/env');
+const {
+  checkProductionEnv,
+  corsOrigins,
+  exitOnInvalidEnv,
+  MIN_SECRET_LENGTH,
+} = require('../../src/lib/env');
 
 const goodEnv = {
   NODE_ENV: 'production',
@@ -64,5 +69,36 @@ describe('corsOrigins', () => {
       'https://a.vercel.app',
       'http://localhost:5173',
     ]);
+  });
+});
+
+describe('exitOnInvalidEnv', () => {
+  let exit;
+  let error;
+
+  beforeEach(() => {
+    exit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+    error = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('lets a good production setup start', () => {
+    exitOnInvalidEnv(goodEnv);
+
+    expect(exit).not.toHaveBeenCalled();
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  it('prints every problem and stops with code 1', () => {
+    exitOnInvalidEnv({ ...goodEnv, JWT_SECRET: 'change-me', CORS_ORIGIN: '*' });
+
+    expect(exit).toHaveBeenCalledWith(1);
+    const message = error.mock.calls[0][0];
+    expect(message).toMatch(/^The production settings are not valid:/);
+    expect(message).toContain('- JWT_SECRET is still the example value');
+    expect(message).toContain('- CORS_ORIGIN must be the address of the frontend, not *');
   });
 });

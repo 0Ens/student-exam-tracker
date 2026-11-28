@@ -35,4 +35,13 @@ function corsOrigins(value) {
   return list.length === 1 ? list[0] : list;
 }
 
-module.exports = { checkProductionEnv, corsOrigins, MIN_SECRET_LENGTH };
+// Prints the problems and stops the process. Used at startup.
+function exitOnInvalidEnv(env) {
+  const problems = checkProductionEnv(env);
+  if (problems.length > 0) {
+    console.error(`The production settings are not valid:\n- ${problems.join('\n- ')}`);
+    process.exit(1);
+  }
+}
+
+module.exports = { checkProductionEnv, corsOrigins, exitOnInvalidEnv, MIN_SECRET_LENGTH };

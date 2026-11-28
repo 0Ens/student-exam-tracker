@@ -1,12 +1,8 @@
 require('dotenv').config({ quiet: true });
-const { checkProductionEnv } = require('./lib/env');
+const { exitOnInvalidEnv } = require('./lib/env');
 
 // Stop early with a clear message instead of running with unsafe settings.
-const problems = checkProductionEnv(process.env);
-if (problems.length > 0) {
-  console.error(`The production settings are not valid:\n- ${problems.join('\n- ')}`);
-  process.exit(1);
-}
+exitOnInvalidEnv(process.env);
 
 const { createApp } = require('./app');
 
