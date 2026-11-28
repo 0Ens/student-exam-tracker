@@ -64,6 +64,15 @@ export const examsApi = {
     apiRequest(`/courses/${courseId}/exams`, { method: 'POST', body: input }),
   update: (id, input) => apiRequest(`/exams/${id}`, { method: 'PUT', body: input }),
   remove: (id) => apiRequest(`/exams/${id}`, { method: 'DELETE' }),
+  // Search and filters (FR6). Empty filters are left out of the URL.
+  search: (filters = {}) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== '') params.set(key, value);
+    }
+    const query = params.toString();
+    return apiRequest(query ? `/exams?${query}` : '/exams');
+  },
 };
 
 export const gradesApi = {
