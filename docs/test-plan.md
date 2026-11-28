@@ -29,24 +29,24 @@ API tests run against a separate SQLite database (`test.db`) that is reset befor
 | TC-09 | FR4      | Dashboard with past and future exams        | Sorted by date, past ones marked as overdue                | Unit, API, UI | Automated, passing |
 | TC-10 | FR5      | Grades 80 (40%) and 60 (60%)                | Course average is 68                                       | Unit, API, UI | Automated, passing |
 | TC-11 | FR5      | Two courses with different credits          | GPA is calculated using credits                            | Unit, API     | Automated, passing |
-| TC-12 | FR6      | Filter by course and by type "exam"         | Only matching items are shown                              | API, UI       | API passing        |
-| TC-13 | FR6      | Search for something that does not exist    | "No results" message                                       | API, UI       | API passing        |
+| TC-12 | FR6      | Filter by course and by type "exam"         | Only matching items are shown                              | API, UI       | Automated, passing |
+| TC-13 | FR6      | Search for something that does not exist    | "No results" message                                       | API, UI       | Automated, passing |
 | TC-14 | FR7      | User B tries to open user A's course        | Not allowed, no data is shown                              | API           | Automated, passing |
 | TC-15 | NFR      | Open the app on a phone and on a laptop     | The layout works on both                                   | Manual        | Planned            |
 | TC-16 | NFR      | After deployment, open the site and log in  | Site works online                                          | Manual, smoke | Planned            |
 
-## Current status (23 Nov 2026)
+## Current status (28 Nov 2026)
 
 | Suite             | Tests | Result | Coverage                    |
 | ----------------- | ----- | ------ | --------------------------- |
-| Backend (Jest)    | 109   | Pass   | 99.4% lines, 89.8% branches |
-| Frontend (Vitest) | 59    | Pass   | -                           |
+| Backend (Jest)    | 113   | Pass   | 99.4% lines, 89.8% branches |
+| Frontend (Vitest) | 66    | Pass   | -                           |
 
-Test cases TC-01 to TC-11 and TC-14 are automated. TC-07 and TC-08 are tested on the API and on the exams page; the page also blocks a weight over 100% before it calls the API.
+Test cases TC-01 to TC-14 are automated. TC-07 and TC-08 are tested on the API and on the exams page; the page also blocks a weight over 100% before it calls the API.
 
 - TC-09: the overdue/upcoming rules have unit tests (`deadlines.test.js`), `GET /api/deadlines` has API tests, and the dashboard page has UI tests. The Cypress part comes in S5.
 - TC-10 and TC-11: the average, letter and GPA rules have unit tests (`grades.test.js`); `GET /api/grades` and `GET /api/courses/:id/grade` have API tests; the course page shows the average of TC-10.
-- TC-12 and TC-13: `GET /api/exams` (search and filters) has API tests. The search page (4.5, 24 Nov) adds the UI part.
+- TC-12 and TC-13: `GET /api/exams` (search and filters) has API tests, and the search page (`/search`) has UI tests for the course and type filters and the "No results" message.
 
 TC-15 and TC-16 are manual and belong to the release (S6).
 

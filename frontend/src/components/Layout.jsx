@@ -22,6 +22,7 @@ export default function Layout() {
               Dashboard
             </NavLink>
             <NavLink to="/courses">Courses</NavLink>
+            <NavLink to="/search">Search</NavLink>
             <span className="muted">{user.name}</span>
             <button type="button" className="secondary" onClick={onLogout}>
               Log out
