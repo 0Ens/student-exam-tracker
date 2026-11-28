@@ -9,6 +9,7 @@
 | `/courses`     | Courses       | Logged in | FR2, FR7    | S2     |
 | `/courses/:id` | Course detail | Logged in | FR3, FR5    | S3     |
 | `/`            | Dashboard     | Logged in | FR4, FR5    | S4     |
+| `/search`      | Search        | Logged in | FR6         | S4     |
 
 ## Page flow
 
@@ -21,7 +22,7 @@
                   v                             v
             +-----------------------------------------+
             |  Dashboard (/)                          |
-            |  top bar: Dashboard | Courses | Logout  |
+            |  top bar: Dashboard | Courses | Search  |
             +-----------------------------------------+
                   |                         ^
                   v                         |
@@ -29,6 +30,8 @@
             |   Courses   | ------------> | Course detail |
             +-------------+ <------------ | (exams list)  |
                                   back    +---------------+
+
+  Search (/search): result rows link to the course detail page
 
   Logout from any page -> Login
   Opening a protected page without a token -> Login (TC-03)
@@ -126,7 +129,26 @@ Since S4 the page also shows the course average under the list, for example `Cou
 
 - The overdue card is only shown when something is overdue (date passed, no grade).
 - A new user without courses sees "You have no courses yet." and a link to the courses page.
-- Course codes link to the course page. Search and filters get their own page in 4.5.
+- Course codes link to the course page. Search and filters have their own page (below).
+
+### Search (S4)
+
+```
++------------------------------------------------------------+
+|  Search                                                    |
+|  Search [Title or course code_____________________]        |
+|  Course [All courses v]  Type [Exam v]                     |
+|  From [__.__.____]       To [__.__.____]                   |
+|  [ Search ] [ Clear ]                                      |
+|                                                            |
+|  1 result                                                  |
+|  Midterm  [Exam]  CS201 · 20 Nov 2026 · 20%       Grade 75 |
++------------------------------------------------------------+
+```
+
+- Without filters the page lists all items of the user, sorted by date.
+- The filters are kept in the URL (`/search?courseId=1&type=exam`), so reload and back keep the search.
+- No match shows "No results. Try other words or fewer filters." (TC-13).
 
 ## Layout rules
 
