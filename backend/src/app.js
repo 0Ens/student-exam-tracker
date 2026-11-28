@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { errorHandler, notFound } = require('./middleware/errors');
+const { corsOrigins } = require('./lib/env');
 const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/courses');
 const examRoutes = require('./routes/exams');
@@ -10,7 +11,7 @@ const deadlineRoutes = require('./routes/deadlines');
 function createApp() {
   const app = express();
 
-  app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+  app.use(cors({ origin: corsOrigins(process.env.CORS_ORIGIN) }));
   app.use(express.json());
 
   app.get('/api/health', (req, res) => {
