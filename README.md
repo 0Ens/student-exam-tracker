@@ -35,6 +35,30 @@ npm install
 npm run dev
 ```
 
+## Run with Docker
+
+The backend has a Dockerfile (`backend/Dockerfile`). The SQLite database is stored in `/data`, so use a volume to keep it:
+
+```bash
+docker build -t exam-tracker-api backend
+docker run -p 4000:4000 -v exam-tracker-data:/data   -e JWT_SECRET=<at least 32 characters>   -e CORS_ORIGIN=http://localhost:5173   exam-tracker-api
+```
+
+The container runs the database migrations at startup and has a health check on `/api/health`.
+
+### Production settings
+
+| Variable         | Example                         | Note                                        |
+| ---------------- | ------------------------------- | ------------------------------------------- |
+| `NODE_ENV`       | `production`                    | Set in the image                            |
+| `PORT`           | `4000`                          | Set in the image                            |
+| `DATABASE_URL`   | `file:/data/app.db`             | Set in the image                            |
+| `JWT_SECRET`     | random text, 32+ characters     | Required, the server stops without it       |
+| `JWT_EXPIRES_IN` | `1d`                            | Optional                                    |
+| `CORS_ORIGIN`    | `https://<frontend>.vercel.app` | Required in production, can be a comma list |
+
+With `NODE_ENV=production` the server checks these values at startup and stops with a clear message when the secret is the example value or too short, or when `CORS_ORIGIN` is missing or `*`.
+
 ## Tests
 
 ```bash
